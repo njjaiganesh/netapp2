@@ -19,7 +19,7 @@ steps:
   inputs:
     version: '3.0.x'
     packageType: runtime
-k
+
 - task: DotNetCoreCLI@2
   inputs:
     command: publish
