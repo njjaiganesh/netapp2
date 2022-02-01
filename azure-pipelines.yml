@@ -26,3 +26,11 @@ steps:
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)'
     publishLocation: 'pipeline'
+- task: UniversalPackages@0
+  inputs:
+    command: 'publish'
+    publishDirectory: '$(Build.ArtifactStagingDirectory)'
+    feedsToUsePublish: 'internal'
+    vstsFeedPublish: '05183aad-9297-495c-b8e8-60bd38ec3f97/05b4d824-fa31-49e4-9ba0-76555f5d227e'
+    vstsFeedPackagePublish: 'samplepkg'
+    versionOption: 'patch'
