@@ -45,6 +45,6 @@ steps:
 - task: Docker@2
   inputs:
     containerRegistry: 'dockerconnect'
-    repository: 'netapp2'
+    repository: 'njjaiganeshq/netapp2'
     command: 'buildAndPush'
     Dockerfile: 'dockerfile'
