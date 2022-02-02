@@ -15,4 +15,5 @@ from mcr.microsoft.com/dotnet/core/aspnet:3.0 AS build
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.0
 WORKDIR /tmp
 COPY /tmp ./
+EXPOSE 5001
 ENTRYPOINT ["dotnet", "netapp2.dll"]
