@@ -29,5 +29,8 @@ steps:
     destinationFolder: '$(System.DefaultWorkingDirectory)/tmp'
     cleanDestinationFolder: false
     overwriteExistingFiles: true
-- script: ls -l $(System.DefaultWorkingDirectory)/tmp
+- script: cat <<EOT >> $(System.DefaultWorkingDirectory)/tmp/dockerfile
+          line 1
+          line 2
+          EOT
   displayName: 'Run a one-line script 2'
