@@ -13,55 +13,65 @@ parameters:
     type: string
   - name: vmtags
     type: string
-steps:
+stages:
+  - stage: build
+    jobs:
+      - job: build
+        steps:
+          - script: echo ${{ parameters.version }}
+            displayName: 'Run a one-line script'
 
-- script: echo ${{ parameters.version }}
-  displayName: 'Run a one-line script'
+          - task: UniversalPackages@0
+            inputs:
+              command: 'download'
+              downloadDirectory: '$(System.DefaultWorkingDirectory)'
+              feedsToUse: 'internal'
+              vstsFeed: '05183aad-9297-495c-b8e8-60bd38ec3f97/05b4d824-fa31-49e4-9ba0-76555f5d227e'
+              vstsFeedPackage: '48bf7bcd-10ea-4f22-aeca-583fe43dfa9d'
+              vstsPackageVersion: ${{ parameters.version }}
+              
+          - task: ExtractFiles@1
+            inputs:
+              archiveFilePatterns: '**/*.zip'
+              destinationFolder: '$(System.DefaultWorkingDirectory)/tmp'
+              cleanDestinationFolder: false
+              overwriteExistingFiles: true
+          - script: echo -e "FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build\nWORKDIR /source\n\nCOPY *.sln .\nCOPY netapp2/*.csproj ./netapp2/\nRUN dotnet restore\n\nCOPY netapp2/. ./netapp2/\nWORKDIR /source/netapp2\nRUN dotnet publish -c release -o /app --no-restore\n\nFROM mcr.microsoft.com/dotnet/aspnet:6.0\nWORKDIR /app\nCOPY --from=build /app ./\nENTRYPOINT [\"dotnet\", \"netapp2.dll\"]" >> $(System.DefaultWorkingDirectory)/tmp/dockerfile
+            displayName: 'Run a one-line script 2'
+            
+          - script: ls -l
+            displayName: 'Run a one-line script'
 
-- task: UniversalPackages@0
-  inputs:
-    command: 'download'
-    downloadDirectory: '$(System.DefaultWorkingDirectory)'
-    feedsToUse: 'internal'
-    vstsFeed: '05183aad-9297-495c-b8e8-60bd38ec3f97/05b4d824-fa31-49e4-9ba0-76555f5d227e'
-    vstsFeedPackage: '48bf7bcd-10ea-4f22-aeca-583fe43dfa9d'
-    vstsPackageVersion: ${{ parameters.version }}
-    
-- task: ExtractFiles@1
-  inputs:
-    archiveFilePatterns: '**/*.zip'
-    destinationFolder: '$(System.DefaultWorkingDirectory)/tmp'
-    cleanDestinationFolder: false
-    overwriteExistingFiles: true
-- script: echo -e "FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build\nWORKDIR /source\n\nCOPY *.sln .\nCOPY netapp2/*.csproj ./netapp2/\nRUN dotnet restore\n\nCOPY netapp2/. ./netapp2/\nWORKDIR /source/netapp2\nRUN dotnet publish -c release -o /app --no-restore\n\nFROM mcr.microsoft.com/dotnet/aspnet:6.0\nWORKDIR /app\nCOPY --from=build /app ./\nENTRYPOINT [\"dotnet\", \"netapp2.dll\"]" >> $(System.DefaultWorkingDirectory)/tmp/dockerfile
-  displayName: 'Run a one-line script 2'
-  
-- script: ls -l
-  displayName: 'Run a one-line script'
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'dockerconnect'
+              command: 'logout'
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'dockerconnect'
+              command: 'login'
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'dockerconnect'
+              repository: 'njjaiganeshq/netapp2'
+              command: 'buildAndPush'
+              Dockerfile: 'dockerfile'
+  - stage: deploy
+    jobs:
+      - deployment: VMDeploy
+        displayName: Deploy container to VM
+        environment:
+          name: VMEnv_Linux
+          resourceType: VirtualMachine
+          tags: ${{ parameters.vmtags }}
+        strategy:
+          runOnce:
+            deploy:   
+              steps:
+                - script: sudo docker run -dp 5002:5001 njjaiganeshq/netapp2:$(wget -q https://registry.hub.docker.com/v1/repositories/njjaiganeshq/netapp2/tags -O -|jq '.[-1].name')
 
-- task: Docker@2
-  inputs:
-    containerRegistry: 'dockerconnect'
-    command: 'logout'
-- task: Docker@2
-  inputs:
-    containerRegistry: 'dockerconnect'
-    command: 'login'
-- task: Docker@2
-  inputs:
-    containerRegistry: 'dockerconnect'
-    repository: 'njjaiganeshq/netapp2'
-    command: 'buildAndPush'
-    Dockerfile: 'dockerfile'
-jobs:
-  - deployment: VMDeploy
-    displayName: Deploy container to VM
-    environment:
-     name: VMEnv_Linux
-     resourceType: VirtualMachine
-     tags: ${{ parameters.vmtags }}
-    strategy:
-     runOnce:
-        deploy:   
-          steps:
-            - script: sudo docker run -dp 5002:5001 njjaiganeshq/netapp2:$(wget -q https://registry.hub.docker.com/v1/repositories/njjaiganeshq/netapp2/tags -O -|jq '.[-1].name')
+
+
+
+
+        
