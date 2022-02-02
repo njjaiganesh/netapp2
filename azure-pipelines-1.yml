@@ -8,7 +8,11 @@ trigger:
 
 pool:
   vmImage: ubuntu-latest
-
+parameters:
+  - name: version
+    type: string
+  - name: vmtags
+    type: string
 steps:
 - script: echo '$(System.DefaultWorkingDirectory)'!
   displayName: 'Run a one-line script'
@@ -20,7 +24,7 @@ steps:
     feedsToUse: 'internal'
     vstsFeed: '05183aad-9297-495c-b8e8-60bd38ec3f97/05b4d824-fa31-49e4-9ba0-76555f5d227e'
     vstsFeedPackage: '48bf7bcd-10ea-4f22-aeca-583fe43dfa9d'
-    vstsPackageVersion: '0.0.1'
+    vstsPackageVersion: $ {{ parameters.version }}
 
 - task: ExtractFiles@1
   inputs:
