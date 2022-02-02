@@ -12,7 +12,7 @@ from mcr.microsoft.com/dotnet/core/aspnet:3.0 AS build
 # RUN dotnet publish -c release -o /app --no-restore
 
 # final stage/image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.0
 WORKDIR /tmp
 COPY /tmp ./
 ENTRYPOINT ["dotnet", "netapp2.dll"]
