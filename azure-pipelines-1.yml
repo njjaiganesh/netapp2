@@ -36,4 +36,4 @@ steps:
     containerRegistry: 'dockerconnect'
     repository: 'netapp2'
     command: 'buildAndPush'
-    Dockerfile: '**/tmp/Dockerfile'
+    Dockerfile: '/tmp/Dockerfile'
