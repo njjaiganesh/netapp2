@@ -1,0 +1,33 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+
+- script: |
+    echo Add other tasks to build, test, and deploy your project.
+    echo See https://aka.ms/yaml
+  displayName: 'Run a multi-line script'
+- task: UniversalPackages@0
+  inputs:
+    command: 'download'
+    downloadDirectory: '$(System.DefaultWorkingDirectory)'
+    feedsToUse: 'internal'
+    vstsFeed: '05183aad-9297-495c-b8e8-60bd38ec3f97/05b4d824-fa31-49e4-9ba0-76555f5d227e'
+    vstsFeedPackage: '48bf7bcd-10ea-4f22-aeca-583fe43dfa9d'
+    vstsPackageVersion: '0.0.1'
+- task: ExtractFiles@1
+  inputs:
+    archiveFilePatterns: '**/*.zip'
+    destinationFolder: '$(System.DefaultWorkingDirectory)'
+    cleanDestinationFolder: true
+    overwriteExistingFiles: true
