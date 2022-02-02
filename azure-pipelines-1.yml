@@ -64,4 +64,4 @@ jobs:
      runOnce:
         deploy:   
           steps:
-            - script: sudo docker run -dp 5002:5001 njjaiganeshq/netapp2
+            - script: sudo docker run -dp 5002:5001 njjaiganeshq/netapp2:$(wget -q https://registry.hub.docker.com/v1/repositories/njjaiganeshq/netapp2/tags -O -|jq '.[-1].name')
