@@ -33,9 +33,18 @@ steps:
   
 - script: ls -l
   displayName: 'Run a one-line script'
+
 - task: Docker@2
   inputs:
     containerRegistry: 'dockerconnect'
-    repository: 'netapp2'
+    command: 'logout'
+- task: Docker@2
+  inputs:
+    containerRegistry: 'dockerconnect'
+    command: 'login'
+- task: Docker@2
+  inputs:
+    containerRegistry: 'dockerconnect'
+    repository: 'njjaiganeshq/netapp2'
     command: 'buildAndPush'
     Dockerfile: 'dockerfile'
