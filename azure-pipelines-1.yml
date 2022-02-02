@@ -36,10 +36,4 @@ steps:
     containerRegistry: 'dockerconnect'
     repository: 'netapp2'
     command: 'buildAndPush'
-    Dockerfile: '/dockerfile'
-- task: Docker@2
-  inputs:
-    containerRegistry: 'dockerconnect'
-    repository: 'netapp2'
-    command: 'buildAndPush'
-    Dockerfile: 'dockerfile'    
+    Dockerfile: 'dockerfile'
