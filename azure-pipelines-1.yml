@@ -31,4 +31,6 @@ steps:
 - script: echo -e "FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build\nWORKDIR /source\n\nCOPY *.sln .\nCOPY netapp2/*.csproj ./netapp2/\nRUN dotnet restore\n\nCOPY netapp2/. ./netapp2/\nWORKDIR /source/netapp2\nRUN dotnet publish -c release -o /app --no-restore\n\nFROM mcr.microsoft.com/dotnet/aspnet:6.0\nWORKDIR /app\nCOPY --from=build /app ./\nENTRYPOINT [\"dotnet\", \"netapp2.dll\"]" >> $(System.DefaultWorkingDirectory)/tmp/dockerfile
   displayName: 'Run a one-line script 2'
 - script: ls -l $(System.DefaultWorkingDirectory)/tmp
-  displayName: 'Run a one-line script 2'
+  displayName: 'Run a one-line script 3'
+- script: cat $(System.DefaultWorkingDirectory)/tmp/dockerfile
+  displayName: 'Run a one-line script 4'
