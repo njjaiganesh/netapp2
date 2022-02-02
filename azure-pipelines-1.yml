@@ -37,6 +37,10 @@ steps:
 - task: Docker@2
   inputs:
     containerRegistry: 'dockerconnect'
+    command: 'logout'
+- task: Docker@2
+  inputs:
+    containerRegistry: 'dockerconnect'
     command: 'login'
 - task: Docker@2
   inputs:
