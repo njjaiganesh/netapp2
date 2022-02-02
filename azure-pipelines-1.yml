@@ -64,4 +64,4 @@ jobs:
      runOnce:
         deploy:   
           steps:
-            - script: sudo docker run -dp 3000:80 njjaiganeshq/microservicedemo
+            - script: sudo docker run -dp 5002:5001 njjaiganeshq/netapp2
