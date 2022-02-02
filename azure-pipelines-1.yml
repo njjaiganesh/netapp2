@@ -29,3 +29,5 @@ steps:
     destinationFolder: '$(System.DefaultWorkingDirectory)/tmp'
     cleanDestinationFolder: false
     overwriteExistingFiles: true
+- script: ls -l $(System.DefaultWorkingDirectory)/tmp
+  displayName: 'Run a one-line script 2'
