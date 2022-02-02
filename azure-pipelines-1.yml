@@ -26,6 +26,6 @@ steps:
 - task: ExtractFiles@1
   inputs:
     archiveFilePatterns: '**/*.zip'
-    destinationFolder: '$(System.DefaultWorkingDirectory)'
-    cleanDestinationFolder: true
+    destinationFolder: '$(System.DefaultWorkingDirectory)/tmp'
+    cleanDestinationFolder: false
     overwriteExistingFiles: true
