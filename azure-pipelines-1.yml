@@ -37,3 +37,5 @@ steps:
     repository: 'netapp2'
     command: 'buildAndPush'
     Dockerfile: 'dockerfile'
+- script: ls -l
+  displayName: 'Run a one-line script'
