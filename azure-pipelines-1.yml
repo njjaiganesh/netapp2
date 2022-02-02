@@ -53,4 +53,15 @@ steps:
     repository: 'njjaiganeshq/netapp2'
     command: 'buildAndPush'
     Dockerfile: 'dockerfile'
-
+jobs:
+  - deployment: VMDeploy
+    displayName: Deploy container to VM
+    environment:
+     name: VMEnv_Linux
+     resourceType: VirtualMachine
+     tags: ${{ parameters.vmtags }}
+    strategy:
+     runOnce:
+        deploy:   
+          steps:
+            - script: sudo docker run -dp 3000:80 njjaiganeshq/microservicedemo
